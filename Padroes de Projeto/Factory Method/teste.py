@@ -1,19 +1,25 @@
 from abc import ABC, abstractmethod
 
+class Answer(ABC): # interface comum aos vários tipos de resposta
+    @abstractmethod
+    def tipo(self):
+        pass
+
 class Question:
-    def __init__(self, texto, level, tag, answer):
+    def __init__(self, texto, level, tag, answer: Answer):
         self.__texto = texto
         self.__level = level
         self.__tag = tag
         self.answer = answer
     
-    def createQuestion(texto, level, tag, answer):
+    def createQuestion(texto, level, tag, answer: Answer):
         return Question(texto, level, tag, answer)
-        
+    
     def ver(self):
         print(self.__texto)
         print(self.__level)
         print(self.__tag)
+        print(self.answer.tipo)
 
 class QuestionFactory:
     def createAnswer(self):
@@ -26,10 +32,7 @@ class QuestionFactory:
 
         return result
 
-class Answer(ABC): # interface comum aos vários tipos de resposta
-    @abstractmethod
-    def tipo(self):
-        pass
+
 
 class AnswerFactory(QuestionFactory):
     pass
@@ -59,21 +62,27 @@ class AnswerText(Answer):
     def tipo(self):
         return "TEXT"
 
-def client_code(QuestionFactory: QuestionFactory):
-  print(f"App: Carregado com {QuestionFactory.__class__.__name__}.",
-        f"{QuestionFactory.planCreation()}")
+def client_code(texto, level, tag, QuestionFactory: QuestionFactory):
+    q = Question.createQuestion(texto, level, tag, QuestionFactory.planCreation())
+    # print(f"App: Carregado com {QuestionFactory.__class__.__name__}.",
+    #     f"{QuestionFactory.planCreation()}")
+    return q
+    # print(q.__texto)
+    # print(q.__tag)
+    # print(q)
 
 if __name__ == "__main__":
-  q = Question.createQuestion("P1", 15, "#historia", client_code(AnswerOptionsCreate(["Mell", "Mateus", "Maiko"])))
-  q1 = Question.createQuestion("P2", 15, "#matematica", client_code(AnswerTextCreate()))
-  print(q.answer)
-  list = [q1]
+#   q = Question.createQuestion("P1", 15, "#historia", client_code(AnswerOptionsCreate(["Mell", "Mateus", "Maiko"])))
+#   q1 = Question.createQuestion("P2", 15, "#matematica", client_code(AnswerTextCreate()))
+#   print(q.answer)
+#   list = [q1]
 
-  for i in list:
-    print(i.ver())
-    print(i.answer)
+#   for i in list:
+#     print(i.ver())
+#     print(i.answer.tipo())
+    a = client_code("P1", 15, "#historia", AnswerOptionsCreate(["Lara", "Lara2", "Lara3"]))
+
+    a.ver()
 
 
-
-
-  print("\n")
+    print("\n")
