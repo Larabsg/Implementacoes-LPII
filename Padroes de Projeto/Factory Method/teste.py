@@ -15,52 +15,65 @@ class Question:
         print(self.__level)
         print(self.__tag)
 
-class Logistica:
+class QuestionFactory:
     def createAnswer(self):
         pass
     
     def planCreation(self):
         answer = self.createAnswer()
 
-        result = f"Logistics: Questão criada...\n{answer.resposta()}"
+        result = f"Logistics: Questão criada...\n{answer.tipo()}"
 
         return result
 
 class Answer(ABC): # interface comum aos vários tipos de resposta
     @abstractmethod
-    def resposta(self):
+    def tipo(self):
         pass
 
-class AnswerOptionsCreate(Logistica): # factory de respostas com opção
-    def createAnswer(self):
-        return AnswerOptions(["Lara", "Edsom", "Julia"])
+class AnswerFactory(QuestionFactory):
+    pass
 
-class AnswerTextCreate(Logistica): # factory de respostas de texto
+class AnswerOptionsCreate(QuestionFactory): # factory de respostas com opção
+    def __init__(self, options):
+        self.options = options
+        
     def createAnswer(self):
-        return AnswerText("Texto")
+        return AnswerOptions(self.options)
+
+class AnswerTextCreate(QuestionFactory): # factory de respostas de texto
+    def createAnswer(self):
+        return AnswerText()
 
 class AnswerOptions(Answer): 
     def __init__(self, opcoes):
         self.opcoes = opcoes
+    
+    def options(self):
+        return self.opcoes
 
-    def resposta(self):
-        print(self.opcoes)
-        return "Resposta de opções criada"
+    def tipo(self):
+        return "CHOICE"
 
 class AnswerText(Answer):
-    def __init__(self, texto):
-        self.texto = texto
+    def tipo(self):
+        return "TEXT"
 
-    def resposta(self):
-        return "Resposta de texto criada"
-
-def client_code(logistica: Logistica):
-  print(f"App: Carregado com {logistica.__class__.__name__}.",
-        f"{logistica.planCreation()}")
+def client_code(QuestionFactory: QuestionFactory):
+  print(f"App: Carregado com {QuestionFactory.__class__.__name__}.",
+        f"{QuestionFactory.planCreation()}")
 
 if __name__ == "__main__":
-  client_code(AnswerOptionsCreate())
-  q = Question.createQuestion("P1", 15, "#historia", AnswerOptionsCreate())
-  q.ver()
+  q = Question.createQuestion("P1", 15, "#historia", client_code(AnswerOptionsCreate(["Mell", "Mateus", "Maiko"])))
+  q1 = Question.createQuestion("P2", 15, "#matematica", client_code(AnswerTextCreate()))
+  print(q.answer)
+  list = [q1]
+
+  for i in list:
+    print(i.ver())
+    print(i.answer)
+
+
+
+
   print("\n")
-#   client_code(AnswerTextCreate())
