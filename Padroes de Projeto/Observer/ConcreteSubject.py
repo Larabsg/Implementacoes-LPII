@@ -5,7 +5,7 @@ class ConcreteSubject(Subject):
     def __init__(self, subject):
         self.subject = subject
 
-    _observer = []
+        self._observer = []
     _state = False
 
     def attach(self, observer):

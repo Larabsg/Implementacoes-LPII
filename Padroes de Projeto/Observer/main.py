@@ -1,13 +1,20 @@
-from ConcreteObserverA import ConcreteObserverA
-from ConcreteObserverB import ConcreteObserverB
+from Chat import Chat
 from ConcreteSubject import ConcreteSubject
 
 lp2 = ConcreteSubject("LP 2")
+p = ConcreteSubject("Programação")
 
-lara = ConcreteObserverA("Lara")
+lara = Chat("Lara")
 lp2.attach(lara)
 
-mel = ConcreteObserverB("Melissa")
-lp2.attach(mel)
+edsom = Chat("Edsom")
+lp2.attach(edsom)
 
-lp2.send("Olá!", lara)
+joao = Chat("Joao")
+p.attach(joao)
+
+maria = Chat("Maria")
+p.attach(maria)
+
+lp2.send("Olá", lara)
+p.send("Olá, mundo", maria)
